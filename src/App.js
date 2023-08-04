@@ -26,6 +26,12 @@ class App extends Component {
         this.setState({ name: 'Nome mudou' })
     }
 
+    handleClickButton = () => {
+        const { counter } = this.state
+        console.log(`Cliquei no botão`)
+        this.setState({ counter: counter + 1 })
+    }
+
     render() {
         // Todos os estados precisam de uma função para alterá-los
         const { name, counter } = this.state
@@ -40,6 +46,9 @@ class App extends Component {
                         <span onClick={this.handleClick}>
                             {name} - {counter}
                         </span>
+                        <br />
+                        <br />
+                        <button onClick={this.handleClickButton}>Botão</button>
                     </p>
                     <a
                         className="App-link"
