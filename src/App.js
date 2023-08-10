@@ -1,4 +1,3 @@
-import logo from './logo.svg'
 import './App.css'
 import { render } from '@testing-library/react'
 import { Component } from 'react'
@@ -8,9 +7,10 @@ import { Component } from 'react'
 // function App() {}
 
 class App extends Component {
-    // criando um estado de posts
+    timeoutUpdate = null
+
     state = {
-        // criando um array de objetos
+        counter: 0,
         posts: [
             {
                 id: 1,
@@ -30,13 +30,38 @@ class App extends Component {
         ]
     }
 
+    componentDidMount() {
+        this.handleTimeout()
+    }
+
+    componentDidUpdate() {
+        this.handleTimeout()
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeoutUpdate)
+    }
+
+    handleTimeout = () => {
+        const { posts, counter } = this.state
+
+        this.timeoutUpdate = setTimeout(() => {
+            posts[0].title = 'Título alterado'
+            this.setState({
+                posts,
+                counter: counter + 1
+            })
+        }, 2000)
+    }
+
     render() {
         // Todos os estados precisam de uma função para alterá-los
-        const { posts } = this.state
+        const { posts, counter } = this.state
 
         return (
             <div className="App">
                 {/* se eu quero um retorno preciso colocar parênteses, se eu não quiser retorno, posso usar chaves */}
+                <h1>{counter}</h1>
                 {posts.map(post => (
                     <div key={post.id}>
                         <h1>{post.title}</h1>
