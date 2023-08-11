@@ -2,73 +2,60 @@ import './App.css'
 import { render } from '@testing-library/react'
 import { Component } from 'react'
 
-// Componentes baseados em estados são chamados de componentes stateful
-// Componentes baseados em funções são chamados de componentes stateless
-// function App() {}
-
 class App extends Component {
-    timeoutUpdate = null
-
     state = {
-        counter: 0,
-        posts: [
-            {
-                id: 1,
-                title: 'Título 1',
-                body: 'Corpo 1'
-            },
-            {
-                id: 2,
-                title: 'Título 2',
-                body: 'Corpo 2'
-            },
-            {
-                id: 3,
-                title: 'Título 3',
-                body: 'Corpo 3'
-            }
-        ]
+        posts: []
     }
 
     componentDidMount() {
-        this.handleTimeout()
+        this.loadPosts()
     }
 
-    componentDidUpdate() {
-        this.handleTimeout()
-    }
+    loadPosts = async () => {
+        const postsResponse = fetch(
+            'https://jsonplaceholder.typicode.com/posts'
+        )
 
-    componentWillUnmount() {
-        clearTimeout(this.timeoutUpdate)
-    }
+        const photosResponse = fetch(
+            'https://jsonplaceholder.typicode.com/photos'
+        )
 
-    handleTimeout = () => {
-        const { posts, counter } = this.state
+        const [posts, photos] = await Promise.all([
+            postsResponse,
+            photosResponse
+        ])
 
-        this.timeoutUpdate = setTimeout(() => {
-            posts[0].title = 'Título alterado'
-            this.setState({
-                posts,
-                counter: counter + 1
-            })
-        }, 2000)
+        const postsJson = await posts.json()
+        const photosJson = await photos.json()
+
+        // Array para armazenar os posts e fotos
+        const photosAndPosts = postsJson.map((post, index) => {
+            return {
+                ...post,
+                cover: photosJson[index].url
+            }
+        })
+
+        this.setState({ posts: photosAndPosts })
     }
 
     render() {
-        // Todos os estados precisam de uma função para alterá-los
-        const { posts, counter } = this.state
+        const { posts } = this.state
 
         return (
-            <div className="App">
-                {/* se eu quero um retorno preciso colocar parênteses, se eu não quiser retorno, posso usar chaves */}
-                <h1>{counter}</h1>
-                {posts.map(post => (
-                    <div key={post.id}>
-                        <h1>{post.title}</h1>
-                        <h3>{post.body}</h3>
-                    </div>
-                ))}
-            </div>
+            <section className="container">
+                <div className="posts">
+                    {posts.map(post => (
+                        <div key={post.id} className="post">
+                            <img src={post.cover} alt="" />
+                            <div className="text">
+                                <h1>{post.title}</h1>
+                                <h3>{post.body}</h3>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         )
     }
 }
