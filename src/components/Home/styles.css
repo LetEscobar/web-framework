@@ -1,5 +1,5 @@
 .container {
-    max-width: 1200px;
+    max-width: 100vw;
     min-height: 100vh;
     background-color: #eee;
     padding: 30px;
@@ -20,7 +20,7 @@
 }
 
 .post .text {
-    padding-inline: 10px;
+    padding: 10px;
 }
 
 .post img {
