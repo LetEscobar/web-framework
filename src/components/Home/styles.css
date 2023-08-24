@@ -33,3 +33,14 @@
 .post:hover {
     transform: scale(1.07);
 }
+
+#txtSearch {
+    width: 98.5%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 30px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #707070;
+}

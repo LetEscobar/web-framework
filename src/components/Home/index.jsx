@@ -9,7 +9,8 @@ export class Home extends Component {
         posts: [],
         allPosts: [],
         page: 0,
-        postsPerPage: 2
+        postsPerPage: 10,
+        searchValue: ''
     }
 
     componentDidMount() {
@@ -33,13 +34,34 @@ export class Home extends Component {
         this.setState({posts:[ ...posts, ...nextPosts], page: nextPage })
     }
 
-    render() {
-        const { posts } = this.state
+    handleSearch = (event) => {
+        const { value } = event.target
+        this.setState({ searchValue: value })
+        // console.log(value)
+    }
 
+    render() {
+        const { posts, searchValue } = this.state
+
+        const filteredPosts = !!searchValue 
+        ? posts.filter ((post) => {
+            return post.title.toLowerCase().includes(searchValue.toLowerCase())
+        })
+        : posts
+        
         return (
             <section className="container">
+                <input 
+                    type="text" 
+                    name='txtSearch' 
+                    id='txtSearch' 
+                    placeholder='Search...'
+                    value={searchValue}
+                    onChange={this.handleSearch}
+                />
+
                 <div className="posts">
-                    {posts.map(post => (
+                    {filteredPosts.map(post => (
                         // Na linha abaixo, o post é o objeto que está sendo passado para o componente PostCard
                         <PostCard key = {post.id} post={post} />
                     ))}
@@ -49,4 +71,3 @@ export class Home extends Component {
         )
     }
 }
-
